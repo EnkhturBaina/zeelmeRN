@@ -5,7 +5,8 @@ import { COLOR_MAIN_GREEN, COLOR_MAIN_BLUE, LINEAR_BTN_STYLE } from "../constant
 import { TextInput, Button } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
+  console.log("navigation ", navigation);
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,10 +31,10 @@ const LoginScreen = () => {
           </LinearGradient>
         </TouchableOpacity>
         <View style={styles.registerResetView}>
-          <TouchableOpacity onPress={() => console.log("Pressed")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Sign")}>
             <Text style={{ color: "black" }}>Бүртгүүлэх</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log("Pressed")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Reset")}>
             <Text style={{ color: "black" }}>Нууц үг сэргээх</Text>
           </TouchableOpacity>
         </View>

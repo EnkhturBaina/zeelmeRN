@@ -28,7 +28,7 @@ const SignupScreen = () => {
     }
     hideModal();
   };
-  const containerStyle = {
+  const regModal = {
     backgroundColor: "white",
     padding: 20,
     flexDirection: "row",
@@ -45,9 +45,9 @@ const SignupScreen = () => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.headerText}>Утасны дугаар нь таны нэвтрэх нэр болно</Text>
-          <View style={{ flexDirection: "row", width: "100%", alignItems: "center", marginBottom: 20 }}>
+          <View style={styles.modalContainer}>
             <Portal>
-              <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+              <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={regModal}>
                 {REG_CHARS.map((el, index) => {
                   return (
                     <Button key={index} style={{ margin: 3 }} onPress={() => setRegChar(el, whichRegChar)}>
@@ -57,18 +57,18 @@ const SignupScreen = () => {
                 })}
               </Modal>
             </Portal>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
-              <TouchableOpacity style={{ width: "20%", justifyContent: "center" }} onPress={() => showModal("first")}>
+            <View style={styles.regContainer}>
+              <TouchableOpacity style={styles.regCharContainer} onPress={() => showModal("first")}>
                 <Text>{regFirstChar}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: "20%", justifyContent: "center" }} onPress={() => showModal("second")}>
+              <TouchableOpacity style={styles.regCharContainer} onPress={() => showModal("second")}>
                 <Text>{regSecondChar}</Text>
               </TouchableOpacity>
-              <TextInput keyboardType="numeric" style={[styles.generalInput, { width: "60%" }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="flat" value={phone} onChangeText={(phone) => setPhone(phone)} />
+              <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { width: "60%" }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="flat" value={phone} onChangeText={(phone) => setPhone(phone)} />
             </View>
           </View>
-          <TextInput keyboardType="numeric" style={styles.generalInput} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Утасны дугаар" value={phone} onChangeText={(phone) => setPhone(phone)} />
-          <TextInput style={styles.generalInput} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Нууц үг" value={password} onChangeText={(password) => setPassword(password)} />
+          <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={styles.generalInput} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Утасны дугаар" value={phone} onChangeText={(phone) => setPhone(phone)} />
+          <TextInput style={styles.generalInput} secureTextEntry activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Нууц үг" value={password} onChangeText={(password) => setPassword(password)} />
 
           <TouchableOpacity style={styles.touchableBtn} title="Нэвтрэх" color="transparent" onPress={() => console.log("Pressed" + phone + "---" + password)}>
             <LinearGradient
@@ -121,5 +121,20 @@ const styles = StyleSheet.create({
   generalInput: {
     height: 40,
     backgroundColor: "white",
+  },
+  regContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  regCharContainer: {
+    width: "20%",
+    justifyContent: "center",
+  },
+  modalContainer: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
   },
 });

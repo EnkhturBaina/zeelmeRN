@@ -10,14 +10,14 @@ import "react-native-gesture-handler";
 import ResetPasswordScreen from "./src/screens/ResetPasswordScreen";
 import AppLoading from "expo-app-loading";
 // import { useFonts, Nunito_400Regular } from "@expo-google-fonts/nunito";
-import useFonts from "./src/useFonts";
+// import useFonts from "./src/useFonts";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [IsReady, SetIsReady] = useState(false);
 
   const LoadFonts = async () => {
-    await useFonts();
+    // await useFonts();
   };
 
   // let [fontsLoaded] = useFonts({

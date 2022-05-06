@@ -4,14 +4,20 @@ import ZeelMeLogo from "../../assets/ZeelMeLogo.png";
 import { COLOR_MAIN_GREEN, COLOR_MAIN_BLUE, LINEAR_BTN_STYLE, COLOR_MAIN_TEXT, REG_CHARS } from "../constant";
 import { TextInput, Button, Modal, Portal, Provider } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+import PasswordStrengthMeterBar from "react-native-password-strength-meter-bar";
 
 const SignupScreen = () => {
   const [regFirstChar, setRegFirstChar] = useState("A");
   const [regSecondChar, setRegSecondChar] = useState("A");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordValidColorObj, setPasswordValidColorObj] = useState({ color: "red", fontWeight: "normal" });
+  const [passValidColorUpperObj, setPassValidColorUpperObj] = useState({ color: "red", fontWeight: "normal" });
+  const [passValidColorSpecialObj, setPassValidColorSpecialObj] = useState({ color: "red", fontWeight: "normal" });
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [whichRegChar, setWhichRegChar] = useState("");
-
+  const regexSpecial = /^(?=.*[_\W]).+$/;
+  const regexUpper = /^(?=.*[A-Z]).+$/;
   const [visible, setVisible] = useState(false);
 
   const showModal = (value) => {
@@ -27,6 +33,17 @@ const SignupScreen = () => {
       setRegSecondChar(el);
     }
     hideModal();
+  };
+  const validPass = (pass) => {
+    pass.length > 8 ? setPasswordValidColorObj({ color: "black", fontWeight: "bold" }) : setPasswordValidColorObj({ color: "red", fontWeight: "normal" });
+    regexUpper.test(pass) ? setPassValidColorUpperObj({ color: "black", fontWeight: "bold" }) : setPassValidColorUpperObj({ color: "red", fontWeight: "normal" });
+    regexSpecial.test(pass) ? setPassValidColorSpecialObj({ color: "black", fontWeight: "bold" }) : setPassValidColorSpecialObj({ color: "red", fontWeight: "normal" });
+
+    if (pass.length > 8 && regexUpper.test(pass) && regexSpecial.test(pass)) {
+      setIsPasswordValid(true);
+    } else {
+      setIsPasswordValid(false);
+    }
   };
   const regModal = {
     backgroundColor: "white",
@@ -67,10 +84,25 @@ const SignupScreen = () => {
               <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { width: "60%" }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="flat" value={phone} onChangeText={(phone) => setPhone(phone)} />
             </View>
           </View>
-          <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={styles.generalInput} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Утасны дугаар" value={phone} onChangeText={(phone) => setPhone(phone)} />
-          <TextInput style={styles.generalInput} secureTextEntry activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Нууц үг" value={password} onChangeText={(password) => setPassword(password)} />
+          <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { marginBottom: 10 }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Утасны дугаар" value={phone} onChangeText={(phone) => setPhone(phone)} />
+          {/* <PasswordStrengthMeterBar password={password} showStrenghtText={false} /> */}
+          <Text style={passwordValidColorObj}>• 8 болон түүнээс дээш тэмдэг</Text>
+          <Text style={passValidColorUpperObj}>• 1 том үсэг</Text>
+          <Text style={passValidColorSpecialObj}>• 1 тусгай тэмдэгт (!@#$%^&*_).</Text>
+          <TextInput
+            style={[styles.generalInput, { marginTop: 10 }]}
+            secureTextEntry
+            activeOutlineColor={COLOR_MAIN_GREEN}
+            mode="outlined"
+            label="Нууц үг"
+            value={password}
+            onChangeText={(password) => {
+              setPassword(password);
+              validPass(password);
+            }}
+          />
 
-          <TouchableOpacity style={styles.touchableBtn} title="Нэвтрэх" color="transparent" onPress={() => console.log("Pressed" + phone + "---" + password)}>
+          <TouchableOpacity style={styles.touchableBtn} title="Нэвтрэх" color="transparent" onPress={() => console.log("Pressed" + phone + "---" + password + " -------- " + isPasswordValid)}>
             <LinearGradient
               start={{ x: 0.2, y: 0.8 }}
               end={{ x: 1, y: 1.0 }}
@@ -135,6 +167,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     alignItems: "center",
-    marginBottom: 20,
   },
 });

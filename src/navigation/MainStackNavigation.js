@@ -15,7 +15,6 @@ const MainStackNavigation = () => {
         name="Home"
         component={HomeScreen}
         options={({ navigation }) => ({
-          headerTitle: "Буцах",
           title: "Зээлийн маркет",
           headerLeft: (props) => <MainDrawerButton btnPress={() => navigation.openDrawer()} />,
         })}

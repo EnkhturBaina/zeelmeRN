@@ -81,7 +81,7 @@ const SignupScreen = () => {
               <TouchableOpacity style={styles.regCharContainer} onPress={() => showModal("second")}>
                 <Text>{regSecondChar}</Text>
               </TouchableOpacity>
-              <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { width: "60%" }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="flat" value={phone} onChangeText={(phone) => setPhone(phone)} />
+              <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { width: "60%" }]} activeUnderlineColor={COLOR_MAIN_GREEN} mode="flat" value={phone} onChangeText={(phone) => setPhone(phone)} />
             </View>
           </View>
           <TextInput keyboardType="number-pad" returnKeyType={"done"} maxLength={8} style={[styles.generalInput, { marginBottom: 10 }]} activeOutlineColor={COLOR_MAIN_GREEN} mode="outlined" label="Утасны дугаар" value={phone} onChangeText={(phone) => setPhone(phone)} />

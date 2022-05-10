@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import MainDrawerButton from "../components/MainDrawerButton";
+import { COLOR_MAIN_GREEN } from "../constant";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,9 @@ const MainStackNavigation = () => {
         component={LoginScreen}
         options={{
           headerBackTitle: "Буцах",
+          headerBackTitleStyle: {
+            color: COLOR_MAIN_GREEN,
+          },
         }}
       />
       <Stack.Screen name="Sign" component={SignupScreen} />

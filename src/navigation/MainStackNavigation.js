@@ -19,7 +19,13 @@ const MainStackNavigation = () => {
           headerLeft: (props) => <MainDrawerButton btnPress={() => navigation.openDrawer()} />,
         })}
       />
-      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          headerBackTitle: "Буцах",
+        }}
+      />
       <Stack.Screen name="Sign" component={SignupScreen} />
       <Stack.Screen name="Reset" component={ResetPasswordScreen} />
     </Stack.Navigator>

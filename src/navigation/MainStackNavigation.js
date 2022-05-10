@@ -1,9 +1,10 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Button } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import MainDrawerButton from "../components/MainDrawerButton";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ const MainStackNavigation = () => {
         component={HomeScreen}
         options={({ navigation }) => ({
           title: "Зээлийн маркет",
+          headerLeft: (props) => <MainDrawerButton btnPress={() => navigation.openDrawer()} />,
         })}
       />
       <Stack.Screen name="Login" component={LoginScreen} />

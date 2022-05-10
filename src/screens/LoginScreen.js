@@ -6,7 +6,6 @@ import { TextInput, Button } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
 const LoginScreen = ({ navigation }) => {
-  console.log("navigation ", navigation);
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 

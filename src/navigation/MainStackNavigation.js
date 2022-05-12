@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
+import LoanCalculatorScreen from "../screens/LoanCalculatorScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import MainDrawerButton from "../components/MainDrawerButton";
 import { COLOR_MAIN_GREEN } from "../constant";
@@ -32,6 +33,7 @@ const MainStackNavigation = () => {
       />
       <Stack.Screen name="Sign" component={SignupScreen} />
       <Stack.Screen name="Reset" component={ResetPasswordScreen} />
+      <Stack.Screen name="LoanCalculator" component={LoanCalculatorScreen} />
     </Stack.Navigator>
   );
 };

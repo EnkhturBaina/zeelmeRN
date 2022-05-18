@@ -1,20 +1,61 @@
-import { StyleSheet, Text, View, Image, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, Alert, Linking } from "react-native";
 import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as LocalAuthentication from "expo-local-authentication";
+import checkUser from "../hooks/checkUser";
+import * as WebBrowser from "expo-web-browser";
+import axios from "axios";
+
+const supportedURL = "https://google.com";
+
+const unsupportedURL = "slack://open?team=123456";
 
 const HomeScreen = (props) => {
+  const [userData, setUserData] = checkUser();
+  const [eMongoliaData, setEMongoliaData] = checkUser();
+  const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [grantAccess, setGrantAccess] = useState(false);
+  const [result, setResult] = useState(null);
 
+  // console.log("**********************", userData);
   useEffect(() => {
     (async () => {
       const compatible = await LocalAuthentication.hasHardwareAsync();
       setIsBiometricSupported(compatible);
     })();
   }, []);
+
+  const getDataEMongolia = async () => {
+    try {
+      const result = await axios.post(
+        {
+          state: userData.dan.state,
+          channel: 1626864048648,
+          vendor: "",
+          type: 16082024283142,
+        },
+        `https://services.digitalcredit.mn/api/sso/check`
+      );
+      console.log("setEMongoliaData ****************", result);
+
+      // setEMongoliaData(result.data.data);
+      setError(null);
+    } catch (err) {
+      console.log(err.message);
+      setError(err.message);
+    }
+  };
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync(userData.dan.url);
+    console.log("result*/*/*/*", result);
+    setResult(result);
+    if (result.type == "opened") {
+      getDataEMongolia();
+    }
+  };
 
   const getBioPermission = () => {
     (async () => {
@@ -77,6 +118,9 @@ const HomeScreen = (props) => {
       {isBiometricSupported && <Button onPress={getBioPermission}>Check Bio</Button>}
       {image && <Image source={{ uri: "data:image/jpeg;base64," + image }} style={{ width: 200, height: 200 }} />}
       <Text>{grantAccess ? "PERMISSION CONFIRMED" : "PERMISSION NOT CONFIRMED"}</Text>
+
+      <Button onPress={_handlePressButtonAsync}>sso CHECK</Button>
+      <Text>{result && JSON.stringify(result)}</Text>
     </View>
   );
 };

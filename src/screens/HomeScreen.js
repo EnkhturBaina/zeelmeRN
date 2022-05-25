@@ -1,15 +1,13 @@
-import { StyleSheet, Text, View, Image, Alert, Linking } from "react-native";
+import { StyleSheet, Text, View, Image, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect, useCallback } from "react";
 import * as LocalAuthentication from "expo-local-authentication";
 import checkUser from "../hooks/checkUser";
 import * as WebBrowser from "expo-web-browser";
+import Constants from "expo-constants";
+import * as Linking from "expo-linking";
 import axios from "axios";
-
-const supportedURL = "https://google.com";
-
-const unsupportedURL = "slack://open?team=123456";
 
 const HomeScreen = (props) => {
   const [userData, setUserData] = checkUser();
@@ -20,6 +18,30 @@ const HomeScreen = (props) => {
   const [grantAccess, setGrantAccess] = useState(false);
   const [result, setResult] = useState(null);
 
+  const _handleRedirect = (event) => {
+    if (Constants.platform.ios) {
+      console.log("IOS", event);
+      WebBrowser.dismissBrowser();
+    } else {
+      console.log("OTHER", event);
+
+      _removeLinkingListener();
+    }
+
+    let data = Linking.parse(event.url);
+    console.log("data", data);
+    setEMongoliaData(data);
+  };
+  const _addLinkingListener = () => {
+    console.log("_addLinkingListener CALLED");
+    Linking.addEventListener("url", _handleRedirect);
+  };
+
+  const _removeLinkingListener = () => {
+    console.log("_removeLinkingListener CALLED");
+    Linking.removeEventListener("url", _handleRedirect);
+  };
+
   // console.log("**********************", userData);
   useEffect(() => {
     (async () => {
@@ -29,6 +51,7 @@ const HomeScreen = (props) => {
   }, []);
 
   const getDataEMongolia = async () => {
+    console.log("getDataEMongolia");
     try {
       const result = await axios.post(
         {
@@ -49,11 +72,67 @@ const HomeScreen = (props) => {
     }
   };
   const _handlePressButtonAsync = async () => {
-    let result = await WebBrowser.openBrowserAsync(userData.dan.url);
-    console.log("result*/*/*/*", result);
-    setResult(result);
-    if (result.type == "opened") {
-      getDataEMongolia();
+    if (userData.dan != null) {
+      console.log("IF");
+      let result = await WebBrowser.openBrowserAsync(userData.dan.url, { showTitle: true, showInRecents: true });
+      console.log("webBrowserResult", result);
+      setResult(result.type);
+      console.log("result", result);
+      if (result.type === "opened") {
+        axios.get("https://www.boredapi.com/api/activity").then((resp) => {
+          console.log("opened opened opened", resp.data);
+        });
+        var code = url.indexOf("https://services.digitalcred");
+        console.log("code", code);
+        if (code == 0) {
+          getDataEMongolia();
+        }
+      } else {
+        console.log("asdasd");
+      }
+      // try {
+      //   _addLinkingListener();
+      //   let result = await WebBrowser.openBrowserAsync(
+      //     // We add `?` at the end of the URL since the test backend that is used
+      //     // just appends `authToken=<token>` to the URL provided.
+      //     userData.dan.url
+      //   );
+
+      //   // https://github.com/expo/expo/issues/5555
+      //   if (Constants.platform.ios) {
+      //     _removeLinkingListener();
+      //   }
+      //   console.log("--result", result);
+      //   setResult(result.type);
+      // } catch (error) {
+      //   alert(error);
+      //   console.log(error);
+      // }
+    } else {
+      console.log("ELSE");
+
+      axios
+        .post(`https://services.digitalcredit.mn/api/sso/check`, {
+          state: "РЖ93042817",
+          channel: 1626864048648,
+          vendor: "",
+          type: 16082024283142,
+        })
+        .then(function (response) {
+          setResult(response.data);
+          if (result.status == 200) {
+            Alert.alert("", "Таны мэдээллийг амжилттай татлаа", [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              { text: "OK" },
+            ]);
+          }
+        })
+        .catch(function (error) {
+          setError(err.message);
+        });
     }
   };
 

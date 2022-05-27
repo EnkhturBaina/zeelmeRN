@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, Alert, ScrollView } from "react-native";
 import { Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect, useCallback } from "react";
@@ -18,29 +18,8 @@ const HomeScreen = (props) => {
   const [grantAccess, setGrantAccess] = useState(false);
   const [result, setResult] = useState(null);
 
-  const _handleRedirect = (event) => {
-    if (Constants.platform.ios) {
-      console.log("IOS", event);
-      WebBrowser.dismissBrowser();
-    } else {
-      console.log("OTHER", event);
-
-      _removeLinkingListener();
-    }
-
-    let data = Linking.parse(event.url);
-    console.log("data", data);
-    setEMongoliaData(data);
-  };
-  const _addLinkingListener = () => {
-    console.log("_addLinkingListener CALLED");
-    Linking.addEventListener("url", _handleRedirect);
-  };
-
-  const _removeLinkingListener = () => {
-    console.log("_removeLinkingListener CALLED");
-    Linking.removeEventListener("url", _handleRedirect);
-  };
+  const [userInfo, setUserInfo] = useState(null);
+  const [userAddress, setUserAddress] = useState(null);
 
   // console.log("**********************", userData);
   useEffect(() => {
@@ -50,10 +29,10 @@ const HomeScreen = (props) => {
     })();
   }, []);
 
-  const getDataEMongolia = async () => {
+  const getDataEMongolia = () => {
     console.log("getDataEMongolia");
     try {
-      const result = await axios.post(
+      const result = axios.post(
         {
           state: userData.dan.state,
           channel: 1626864048648,
@@ -73,41 +52,33 @@ const HomeScreen = (props) => {
   };
   const _handlePressButtonAsync = async () => {
     if (userData.dan != null) {
-      console.log("IF");
-      let result = await WebBrowser.openBrowserAsync(userData.dan.url, { showTitle: true, showInRecents: true });
-      console.log("webBrowserResult", result);
-      setResult(result.type);
-      console.log("result", result);
-      if (result.type === "opened") {
-        axios.get("https://www.boredapi.com/api/activity").then((resp) => {
-          console.log("opened opened opened", resp.data);
-        });
-        var code = url.indexOf("https://services.digitalcred");
-        console.log("code", code);
-        if (code == 0) {
-          getDataEMongolia();
+      try {
+        console.log("IF", userData.dan);
+        let result = await WebBrowser.openAuthSessionAsync(userData.dan.url, { showTitle: true, showInRecents: true });
+        setResult(result.type);
+        console.log("result", result);
+        if (result.type === "dismiss") {
+          console.log("dismiss");
+          axios
+            .post("https://services.digitalcredit.mn/api/sso/check", {
+              state: userData.dan.state,
+              channel: 1626864048648,
+              vendor: "",
+              type: 16082024283142,
+            })
+            .then((resp) => {
+              console.log("opened opened opened", resp.data);
+              setUserInfo(resp.data.data.info);
+              setUserAddress(resp.data.data.address);
+            });
+          // getDataEMongolia();
+        } else {
+          console.log("asdasd");
         }
-      } else {
-        console.log("asdasd");
+      } catch (error) {
+        alert(error);
+        console.log(error);
       }
-      // try {
-      //   _addLinkingListener();
-      //   let result = await WebBrowser.openBrowserAsync(
-      //     // We add `?` at the end of the URL since the test backend that is used
-      //     // just appends `authToken=<token>` to the URL provided.
-      //     userData.dan.url
-      //   );
-
-      //   // https://github.com/expo/expo/issues/5555
-      //   if (Constants.platform.ios) {
-      //     _removeLinkingListener();
-      //   }
-      //   console.log("--result", result);
-      //   setResult(result.type);
-      // } catch (error) {
-      //   alert(error);
-      //   console.log(error);
-      // }
     } else {
       console.log("ELSE");
 
@@ -185,7 +156,7 @@ const HomeScreen = (props) => {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Text>Нүүүүүүүүүүүүүүр</Text>
       <Text>Then in App.js, use the useFonts hook to require the file. I've given it a name lobster-reg, which is the name that's used to refer to it in the StyleSheet.</Text>
       <Button icon="camera" mode="contained" onPress={() => props.navigation.navigate("Login")}>
@@ -199,8 +170,10 @@ const HomeScreen = (props) => {
       <Text>{grantAccess ? "PERMISSION CONFIRMED" : "PERMISSION NOT CONFIRMED"}</Text>
 
       <Button onPress={_handlePressButtonAsync}>sso CHECK</Button>
-      <Text>{result && JSON.stringify(result)}</Text>
-    </View>
+      <Text>{userInfo}</Text>
+      <Text>userInfo : {userInfo && JSON.stringify(userInfo)}</Text>
+      <Text>userAddress: {userAddress && JSON.stringify(userAddress)}</Text>
+    </ScrollView>
   );
 };
 

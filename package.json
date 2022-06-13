@@ -29,6 +29,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-currency-input": "^1.0.1",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-paper": "^4.12.1",
     "react-native-password-strength-meter-bar": "^1.2.0",

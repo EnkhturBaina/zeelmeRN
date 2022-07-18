@@ -11,17 +11,7 @@ const LoanCalculatorScreen = () => {
   const [loanFee, setLoanFee] = useState("");
   const [loanPayment, setLoanPayment] = useState("");
 
-  const [value, setValue] = useState(0);
   const PMT = (ir, np, pv, fv, type) => {
-    /*
-     * ir   - interest rate per month
-     * np   - number of periods (months)
-     * pv   - present value
-     * fv   - future value
-     * type - when the payments are due:
-     *        0: end of the period, e.g. end of month (default)
-     *        1: beginning of period
-     */
     var pmt, pvif;
 
     fv || (fv = 0);
@@ -36,11 +26,8 @@ const LoanCalculatorScreen = () => {
 
     return pmt;
   };
-  const addCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  const removeNonNumeric = (num) => num.toString().replace(/[^0-9]/g, "");
 
   const changeLoanAmount = (loanAmount) => {
-    // setLoanAmount(addCommas(removeNonNumeric(loanAmount)));
     setLoanAmount(loanAmount);
     setLoanMonth(0);
     setLoanFee(0);
@@ -76,9 +63,9 @@ const LoanCalculatorScreen = () => {
         separator="."
         precision={0}
       />
-      <Slider style={{ width: "100%", height: 40 }} value={loanMonth} minimumValue={0} maximumValue={60} thumbTintColor={COLOR_MAIN_GREEN} minimumTrackTintColor="#FFFFFF" step={12} maximumTrackTintColor="#000000" onValueChange={(loanMonth) => calcLoanPayment(loanMonth, loanFee)} />
+      {/* <Slider style={{ width: "100%", height: 40 }} value={loanMonth} minimumValue={0} maximumValue={60} thumbTintColor={COLOR_MAIN_GREEN} minimumTrackTintColor="#FFFFFF" step={12} maximumTrackTintColor="#000000" onValueChange={(loanMonth) => calcLoanPayment(loanMonth, loanFee)} />
       <Text>Зээлийн хүү : {loanFee}</Text>
-      <Slider style={{ width: "100%", height: 40 }} value={loanFee} minimumValue={0} maximumValue={3} thumbTintColor={COLOR_MAIN_GREEN} minimumTrackTintColor="#FFFFFF" step={0.5} maximumTrackTintColor="#000000" onValueChange={(loanFee) => calcLoanPayment(loanMonth, loanFee)} />
+      <Slider style={{ width: "100%", height: 40 }} value={loanFee} minimumValue={0} maximumValue={3} thumbTintColor={COLOR_MAIN_GREEN} minimumTrackTintColor="#FFFFFF" step={0.5} maximumTrackTintColor="#000000" onValueChange={(loanFee) => calcLoanPayment(loanMonth, loanFee)} /> */}
       <View style={styles.paymentContainer}>
         <Text>
           Сарын төлөлт: {loanPayment} --- {loanAmount}
